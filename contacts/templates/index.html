@@ -1,0 +1,31 @@
+{%extends "layout.html"%}
+{%block title%}
+Home
+{%endblock%}
+{%block header%}
+<ul id="navbar">
+    <li id="active"><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
+    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+</ul> 
+{%endblock%}
+{%block content%}
+<h1>Home</h1>
+<p>Welcome to the contact-adder! If you have questions about the app or don't understand 
+    something check out the two sections below on using the 'add contact' and 'contacts'
+    functionality.
+</p>
+<h2>Add Contact</h2>
+<p>Simply fill out the form of the information you want to include. Then press the submit
+    button. If you get any errors, read the error message and carefully review your input.
+    Once you submit the form without any errors, you should be directed to the contacts
+    page. 
+</p>
+<h2>Contacts</h2>
+<p>If you don't have any contacts entered, then the page will display a 'no contacts to
+    show' message. Add a contact if you want to see one. If you do have any contacts
+    entered, they will display and there will be a checkbox next to each one. This is for 
+    the delete functionality. Simply check the box of each contact you want to delete
+    then press the delete button at the bottom of the page.
+</p>
+{%endblock%}
