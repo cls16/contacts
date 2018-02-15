@@ -1,39 +1,33 @@
 from contacts.app import db
+from flask_login import UserMixin
 
 
-def contacts_create():
-    sql = """
-        create table contacts(
-            id integer primary key autoincrement,
-            first_name varchar(255),
-            email_address varchar(255)
-        )
-    """
-    db.engine.execute(sql)
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String, nullable=False)
+    lastname = db.Column(db.String, nullable=False)
+    phonenumber = db.Column(db.Integer, nullable=False)
+    email = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return self.firstname, self.lastname, self.phonenumber
 
 
-def sqlite_table_names():
-    sql = """
-        SELECT name FROM sqlite_master
-        WHERE type='table'
-        ORDER BY name;
-    """
-    rows = db.engine.execute(sql)
-    return [row[0] for row in rows]
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
 
+    def __repr__(self):
+        return self.username, self.password
 
-def contacts_drop():
-    sql = "drop table contacts"
-    db.engine.execute(sql)
+    @classmethod
+    def validate(cls, username, password):
+        return cls.query.filter_by(username=username, password=password).one_or_none()
 
-
-def contacts_count():
-    sql = "select count(id) from contacts"
-    result = db.engine.execute(sql)
-    return result.scalar()
-
-
-def contacts_insert(first_name, email):
-    sql = "insert into contacts(first_name, email_address) values('{}','{}')"\
-           .format(first_name, email)
-    db.engine.execute(sql)
+    @classmethod
+    def testing_create(cls):
+        user = cls(username='foo', password='bar')
+        db.session.add(user)
+        db.session.commit()
+        return user

@@ -1,27 +1,41 @@
 from contacts.app import db
-from contacts import model
+from contacts.model import Contact, User
 
+class TestContact:
 
-def test_connection():
-    result = db.engine.execute("select 1=0")
-    assert result.scalar() == 0
+    def setup(self):
+        Contact.query.delete()
+        db.session.commit()
 
+    def test_add(self):
+        bob = Contact(firstname='bob', lastname='smith', 
+        email='bsmith@example.com', phonenumber='555-555-5555')
+        db.session.add(bob)
+        db.session.commit()
 
-def test_contacts_create():
-    if 'contacts' in model.sqlite_table_names():
-        model.contacts_drop()
+        contact = Contact.query.one()
+        assert contact.firstname == 'bob'
 
-    model.contacts_create()
+class TestUser:
 
-    assert 'contacts' in model.sqlite_table_names()
+    def setup(self):
+        Contact.query.delete()
+        db.session.commit()
 
+    def test_add(self):
+        bob = User(username='bob', password='foobar')
+        db.session.add(bob)
+        db.session.commit()
 
-def test_contact_insert():
-    assert model.contacts_count() == 0
+        user = User.query.one()
+        assert user.username == 'bob'
 
-    model.contacts_insert('person', 'person@gmail.com')
+    def test_validate(self):
 
-    assert model.contacts_count() == 1
+        assert not User.validate('foo', 'bar')
 
-def test_html_change()
-    assert
+        bob = User(username='foo', password='bar')
+        db.session.add(bob)
+        db.session.commit()
+
+        assert User.validate('foo', 'bar')

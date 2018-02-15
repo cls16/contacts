@@ -7,9 +7,13 @@ Home
     <li id="active"><a href="{{ url_for('home') }}">Home</a></li>
     <li><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
     <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+    <li id="login_link"><a href="{{ url_for('login') }}">Login</a></li>
 </ul> 
 {%endblock%}
 {%block content%}
+{% if current_user.is_authenticated %}
+<p id="login_message">Hi, {{ current_user.username }}!</p>
+{% endif %}
 <h1>Home</h1>
 <p>Welcome to the Contact Adder&trade;! If you have questions about the app or don't understand 
     something check out the two sections below on using the 'add contact' and 'contacts'

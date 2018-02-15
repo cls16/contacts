@@ -1,5 +1,5 @@
 import flask_webtest
-from contacts.app import app, db, Contact
+from contacts.app import app, db, Contact, User
 
 
 class TestWeb:
@@ -7,7 +7,11 @@ class TestWeb:
     def setup_class(self):
         self.app = app
         self.app.testing = True
+        self.unauth_client = flask_webtest.TestApp(self.app, db=db, use_session_scopes=True)
         self.client = flask_webtest.TestApp(self.app, db=db, use_session_scopes=True)
+        self.user = user = User.testing_create()
+        self.client.post('/login', params={'username':user.username,
+         'password':user.password}, status=302)
 
     def setup(self):
         Contact.query.delete()
@@ -114,6 +118,70 @@ class TestWeb:
         resp = self.client.get('/contacts')
         #make sure no contacts displayed
         resp.mustcontain('No contacts to show')
+
+    def test_login(self):
+        resp = self.client.get('/login')
+
+        form = resp.form
+        form['username'] = self.user.username
+        form['password'] = self.user.password
+        resp = form.submit()
+
+        resp = resp.follow()
+        print(resp)
+        assert resp.request.url == 'http://localhost/home'
+        assert 'Hi, ' + self.user.username in resp
+
+    def test_username_required(self):
+        resp = self.client.get('/login')
+
+        form = resp.form
+        form['username'] = ''
+        form['password'] = self.user.password
+        resp = form.submit()
+
+        assert 'Please fill out this field.' in resp
+        
+    def test_password_required(self):
+        resp = self.client.get('/login')
+
+        form = resp.form
+        form['username'] = self.user.username
+        form['password'] = ''
+        resp = form.submit()
+
+        assert 'Please fill out this field.' in resp
+
+    def test_login_invalid(self):
+        resp = self.client.get('/login')
+
+        form = resp.form
+        form['username'] = 'invalidusername'
+        form['password'] = 'invalidpassword'
+        resp = form.submit()
+
+        assert 'username and password not valid' in resp
+
+    def test_addcontact_login_required(self):
+        self.unauth_client.get('/addcontact', status=401)
+
+    def test_contacts_login_required(self):
+        self.unauth_client.get('/contacts', status=401)
+        
+    def sign_up(self):
+        resp = self.unauth_client.get('/signup')
+
+        form = resp.form
+        form['username'] = 'newusername'
+        form['password'] = 'newpassword'
+        resp = form.submit()
+
+
+
+    #def logout(self):
+
+    #def test_saved_contact(self):
+    
     
 
        

@@ -61,3 +61,22 @@ class TestContactSchema:
         assert result.errors == {'phonenumber': ['You must have a dash between each group of numbers.']}
 
 
+class TestUserSchema:
+    def test_insert_user(self):
+        data = {'username': 'randomUser', 'password': 'randomPass'}
+        result = val.UserSchema().load(data)
+
+        assert not result.errors
+
+    def test_username_required(self):
+        data = {'username': '', 'password': 'randomPass'}
+        result = val.UserSchema().load(data)
+
+        assert result.errors == {'username': ['Please fill out this field.']}
+
+    def test_password_required(self):
+        data = {'username': 'randomUser', 'password': ''}
+        result = val.UserSchema().load(data)
+
+        assert result.errors == {'password': ['Please fill out this field.']}
+
