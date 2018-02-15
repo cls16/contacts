@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d4decfa37071e87ca8cb1f8965f19d8a83a287eb11aa3fb96811881ea9f33125"
+            "sha256": "ce1f668fad584868e7ec7dc0773b68f22df193c44c204551099c706fa21d4ca3"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -33,6 +33,13 @@
                 "sha256:1c7960ccfd6a005cd9f7ba884e6316b5e430a3f1a6c37c5f87d8b43f83b54ec9"
             ],
             "version": "==17.4.0"
+        },
+        "blazeutils": {
+            "hashes": [
+                "sha256:6315f9a5afcdb252d9f46fe99e0263197eb7f27bd8eb4a549420127a52a1a67b",
+                "sha256:2df6b1e3eb4d6e378bee55ee58f963e1f956c3ef5b4c98822b5502d0239a4199"
+            ],
+            "version": "==0.5.3"
         },
         "click": {
             "hashes": [
@@ -152,6 +159,12 @@
                 "sha256:c3fd7a7d41976d9f44db327260e263132466836cef6f91512889ed60ad26557c"
             ],
             "version": "==0.14.1"
+        },
+        "wrapt": {
+            "hashes": [
+                "sha256:d4d560d479f2c21e1b5443bbd15fe7ec4b37fe7e53d335d3b9b0a7b1226fe3c6"
+            ],
+            "version": "==1.10.11"
         }
     },
     "develop": {}

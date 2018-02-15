@@ -12,6 +12,7 @@ pytest = "*"
 marshmallow = "*"
 "e1839a8" = {path = ".", editable = true}
 "flake8" = "*"
+blazeutils = "*"
 
 
 [dev-packages]

@@ -1,5 +1,6 @@
 from contacts.app import db
 from flask_login import UserMixin
+from blazeutils.strings import randchars
 
 
 class Contact(db.Model):
@@ -15,7 +16,7 @@ class Contact(db.Model):
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
     def __repr__(self):
@@ -27,7 +28,7 @@ class User(UserMixin, db.Model):
 
     @classmethod
     def testing_create(cls):
-        user = cls(username='foo', password='bar')
+        user = cls(username=randchars(), password='bar')
         db.session.add(user)
         db.session.commit()
         return user

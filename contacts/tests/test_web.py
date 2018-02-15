@@ -1,6 +1,6 @@
 import flask_webtest
 from contacts.app import app, db, Contact, User
-
+import flask_login
 
 class TestWeb:
     @classmethod
@@ -168,17 +168,23 @@ class TestWeb:
     def test_contacts_login_required(self):
         self.unauth_client.get('/contacts', status=401)
         
-    def sign_up(self):
+    def test_logout(self):
+        logout_client = flask_webtest.TestApp(app, db=db, use_session_scopes=True)
+        logout_user = User.testing_create()
+        logout_client.post('/login', params={'username':logout_user.username,
+         'password':logout_user.password}, status=302)
+        
+        resp = logout_client.get('/logout')
+
+        resp = logout_client.get('/logout', status=401)
+
+    def test_sign_up(self):
         resp = self.unauth_client.get('/signup')
 
         form = resp.form
         form['username'] = 'newusername'
         form['password'] = 'newpassword'
-        resp = form.submit()
-
-
-
-    #def logout(self):
+        resp = form.submit()'''
 
     #def test_saved_contact(self):
     
