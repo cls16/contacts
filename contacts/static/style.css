@@ -1,5 +1,6 @@
 *{
     font-family: 'Nunito', sans-serif;
+
 }
 
 #navbar{
@@ -8,7 +9,7 @@
     padding: 0;
     overflow: hidden;
     background-color: #333;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 #navbar li{
@@ -23,12 +24,26 @@
     text-decoration: none;
 }
 
-#navbar li:not(#active) a:hover {
+#navbar li:not(#active):not(#login_link) a:hover {
     background-color: #111;
 }
 
 #active{
     background-color: #4c45d0;
+}
+
+#login_link{
+    position: absolute;
+    right: 0px;
+    background: green;
+}
+
+#login_message{
+    color:#ffffff;
+    background: green;
+    border:hidden;
+    padding:5px;
+    font-size:15px;
 }
 
 h1{
@@ -42,12 +57,20 @@ h2{
 table {
     font-family: arial, sans-serif;
     width: 100%;
+    border-collapse: collapse;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+}
+
+th{
+    background-color:#4c45d0;
+    color:#dddddd;
+    border:none;
+    font-size:20px;
 }
 
 .check{
@@ -62,17 +85,17 @@ td, th {
     margin-bottom: 5px;
 }
 
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
-
 footer{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
     background-color: #dedede;
     border: solid;
     border-color: #808080;
     border-radius: 5px;
     padding: 10px;
-    margin-top: 40px;
 }
 
 #copyright{
@@ -85,3 +108,5 @@ input{
     border-color: lightgray;
     border-width: 1px;
 }
+
+
