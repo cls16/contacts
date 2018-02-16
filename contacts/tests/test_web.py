@@ -186,11 +186,16 @@ class TestWeb:
         form['password'] = 'newpassword'
         resp = form.submit()
 
+    def test_signup_errors(self):
+        resp = self.unauth_client.get('/signup')
+        
+        form = resp.form
+        form['username'] = ''
+        form['password'] = ''
+        resp = form.submit()
+
+        error_p = resp.pyquery('p.error')
+        assert error_p.eq(0).text() == 'Please fill out this field.' 
+        assert error_p.eq(1).text() == 'Please fill out this field.' 
 
     #def test_saved_contact(self):
-    
-    
-
-       
-        
-        
