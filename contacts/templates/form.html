@@ -1,14 +1,7 @@
+{% set page = "addcontact" %}
 {%extends "layout.html"%}
 {%block title%}
 Add Contact
-{%endblock%}
-{%block header%}
-<ul id="navbar">
-    <li><a href="{{ url_for('home') }}">Home</a></li>
-    <li id="active"><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
-    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
-    <li id="login_link"><a href="{{ url_for('login') }}">Login</a></li>
-</ul> 
 {%endblock%}
 {%block content%}
 <h1>Add Contact</h1>

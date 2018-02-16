@@ -1,14 +1,7 @@
+{% set page = "home" %}
 {%extends "layout.html"%}
 {%block title%}
 Home
-{%endblock%}
-{%block header%}
-<ul id="navbar">
-    <li id="active"><a href="{{ url_for('home') }}">Home</a></li>
-    <li><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
-    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
-    <li id="login_link"><a href="{{ url_for('login') }}">Login</a></li>
-</ul> 
 {%endblock%}
 {%block content%}
 {% if current_user.is_authenticated %}

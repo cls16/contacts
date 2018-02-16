@@ -24,18 +24,12 @@
     text-decoration: none;
 }
 
-#navbar li:not(#active):not(#login_link) a:hover {
+#navbar li:not(#active) a:hover {
     background-color: #111;
 }
 
 #active{
     background-color: #4c45d0;
-}
-
-#login_link{
-    position: absolute;
-    right: 0px;
-    background: green;
 }
 
 #login_message{
