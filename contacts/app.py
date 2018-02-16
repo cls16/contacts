@@ -90,6 +90,24 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        result = val.UserSchema().load(request.form)
+        if result.errors:
+            return render_template('signup.html', error_messages=result.errors, 
+            values=request.form)
+        else:
+            form_username=request.form['username']
+            newuser = User(username=form_username, password=request.form['password'])
+            db.session.add(newuser)
+            db.session.commit()
+            user = User.validate(request.form['username'], request.form['password'])
+            login_user(user)
+            return redirect(url_for('home'))
+    elif request.method == 'GET':
+        return render_template('signup.html', values = {})
+
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template('unauthorized.html'), 401

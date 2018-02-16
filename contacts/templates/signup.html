@@ -1,0 +1,27 @@
+{%extends "layout.html"%}
+{%block title%}
+Signup
+{%endblock%}
+{%block header%}
+<ul id="navbar">
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
+    <li><a href="{{ url_for('contacts') }}">Contacts</a></li>
+    <li id="login_link"><a href="{{ url_for('login') }}">Signup</a></li>
+</ul> 
+{%endblock%}
+{%block content%}
+<h1>Signup</h1>
+<form action="" method="post" novalidate>
+    Username: <input type="text" name="username" value="{{ values['username'] }}"><br>
+    {{ field_error('username') }}<br>
+    Password: <input type="text" name="password" value="{{ values['password'] }}"><br>
+    {{ field_error('password') }}<br>
+</form>
+{%endblock%}
+
+{% macro field_error(fieldname) %}
+{%if fieldname in  error_messages %}
+    <p class="error">{{ error_messages[fieldname][0] }}</p>
+{%endif%}
+{% endmacro %}

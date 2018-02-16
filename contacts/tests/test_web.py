@@ -184,7 +184,8 @@ class TestWeb:
         form = resp.form
         form['username'] = 'newusername'
         form['password'] = 'newpassword'
-        resp = form.submit()'''
+        resp = form.submit()
+
 
     #def test_saved_contact(self):
     
