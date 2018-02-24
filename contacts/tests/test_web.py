@@ -153,14 +153,18 @@ class TestWeb:
         assert 'Please fill out this field.' in resp
 
     def test_login_invalid(self):
-        resp = self.client.get('/login')
+        resp = self.unauth_client.get('/login')
 
         form = resp.form
         form['username'] = 'invalidusername'
         form['password'] = 'invalidpassword'
         resp = form.submit()
 
+        doc = resp.pyquery
+        form_fields = doc('input')
+        
         assert 'username and password not valid' in resp
+        assert form_fields.eq(0).attr['value'] == 'invalidusername'
 
     def test_addcontact_login_required(self):
         self.unauth_client.get('/addcontact', status=401)

@@ -9,12 +9,11 @@ Login
 <form action="" method="post" novalidate>
     Username: <input type="text" name="username" value="{{ values['username'] }}"><br>
     {{ field_error('username') }}<br>
-    Password: <input type="password" name="password" value="{{ values['password'] }}"><br>
+    Password: <input type="password" name="password"><br>
     {{ field_error('password') }}<br>
     <input type="submit" value="submit">
 </form>
 {%endblock%}
-
 {% macro field_error(fieldname) %}
 {%if fieldname in  error_messages %}
     <p class="error">{{ error_messages[fieldname][0] }}</p>

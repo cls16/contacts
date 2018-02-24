@@ -60,13 +60,14 @@ def login():
     if request.method == 'POST':
         result = val.UserSchema().load(request.form)
         if result.errors:
+            form_username = request.form['username']
             return render_template('login.html', error_messages=result.errors, 
-            values=request.form)
+            values={})
         
         user = User.validate(request.form['username'], request.form['password'])
         if user is None:
             return render_template('login.html', message='username and password not valid',
-            values={})
+            values=request.form) 
         
         session['logged_in'] = True
         # Login and validate the user.
