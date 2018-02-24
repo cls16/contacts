@@ -1,0 +1,12 @@
+OPEN VIRTUAL ENVIRONMENT:
+1. Go to: /Dropbox/CalebDadShare/projects/contacts-src
+2. Type in: 'pipenv shell'
+
+RUN FLASK APP:
+1. Open another tab
+2. Make sure you are in /Dropbox/CalebDadShare/projects/contacts-src
+3. Type in: 'pipenv run ./run'
+
+RUN TESTS:
+1. py.test contacts/tests/FILENAME.py
+
