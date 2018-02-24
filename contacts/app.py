@@ -94,6 +94,11 @@ def logout():
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        existing_user_count = User.query.filter_by(username=request.form['username']).count()
+        if existing_user_count:
+            return render_template('signup.html', error_messages={'username': ['This username is already taken.']}, 
+            values=request.form)
+
         result = val.UserSchema().load(request.form)
         if result.errors:
             return render_template('signup.html', error_messages=result.errors, 

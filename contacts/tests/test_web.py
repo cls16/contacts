@@ -190,7 +190,7 @@ class TestWeb:
         form['password'] = 'newpassword'
         resp = form.submit()
 
-    def test_signup_errors(self):
+    def test_signup_field_required(self):
         resp = self.unauth_client.get('/signup')
         
         form = resp.form
@@ -202,4 +202,21 @@ class TestWeb:
         assert error_p.eq(0).text() == 'Please fill out this field.' 
         assert error_p.eq(1).text() == 'Please fill out this field.' 
 
-    #def test_saved_contact(self):
+    def test_duplicate_username_invalid(self):
+        resp = self.unauth_client.get('/signup')
+
+        duplicate_user = User(username = 'duplicate', password = 'foobar')
+        db.session.add(duplicate_user)
+        db.session.commit()
+
+        form = resp.form
+        form['username'] = 'duplicate'
+        form['password'] = 'notfoobar'
+        resp = form.submit()
+
+        error_p = resp.pyquery('p.error')
+        assert error_p.eq(0).text() == 'This username is already taken.' 
+
+        User.query.filter_by(username='duplicate').delete()
+
+        

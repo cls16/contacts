@@ -8,7 +8,7 @@ Signup
 <form action="" method="post" novalidate>
     Username: <input type="text" name="username" value="{{ values['username'] }}"><br>
     {{ field_error('username') }}
-    Password: <input type="password" name="password" value="{{ values['password'] }}"><br>
+    Password: <input type="password" name="password"><br>
     {{ field_error('password') }}
     <input type="submit" value="submit">
 </form>

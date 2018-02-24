@@ -13,14 +13,13 @@ class Contact(db.Model):
     def __repr__(self):
         return self.firstname, self.lastname, self.phonenumber
 
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return self.username, self.password
+        return '<User {}:{}>'.format(self.id, self.username)
 
     @classmethod
     def validate(cls, username, password):
