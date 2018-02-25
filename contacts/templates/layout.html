@@ -15,9 +15,9 @@
             {% block header %}
             <ul id="navbar">
                 <li {{ 'id=active' if page == 'home' }}><a href="{{ url_for('home') }}">Home</a></li>
+                {% if current_user.is_authenticated %}
                 <li {{ 'id=active' if page == 'addcontact' }}><a href="{{ url_for('addcontact') }}">Add Contact</a></li>
                 <li {{ 'id=active' if page == 'contacts' }}><a href="{{ url_for('contacts') }}">Contacts</a></li>
-                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
                 <li {{ 'id=active' if page == 'login' }}><a href="{{ url_for('login') }}">Login</a></li>
