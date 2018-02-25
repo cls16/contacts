@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import contacts.validation as val
 from flask_login import LoginManager, login_required, login_user, logout_user
+import click
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONN', 'sqlite:////tmp/app.db')
@@ -18,12 +19,16 @@ login_manager.init_app(app)
 
 from contacts.model import Contact, User
 
-db.drop_all()
-db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
+@app.cli.command()
+def refresh_database():
+    db.drop_all()
+    db.create_all()
+    click.echo('Refreshed the database.')
 
 @app.route('/home')
 def home():
