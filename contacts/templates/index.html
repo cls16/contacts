@@ -4,9 +4,6 @@
 Home
 {%endblock%}
 {%block content%}
-{% if current_user.is_authenticated %}
-<p id="login_message">Hi, {{ current_user.username }}!</p>
-{% endif %}
 <h1>Home</h1>
 <p>Welcome to the Contact Adder&trade;! If you have questions about the app or don't understand 
     something check out the two sections below on using the 'add contact' and 'contacts'
