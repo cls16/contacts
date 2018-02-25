@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -5,9 +7,11 @@ import contacts.validation as val
 from flask_login import LoginManager, login_required, login_user, logout_user
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONN', 'sqlite:////tmp/app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
+
 #flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)

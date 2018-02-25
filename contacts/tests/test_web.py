@@ -1,5 +1,5 @@
 import flask_webtest
-from contacts.app import app, db, Contact, User
+from contacts.app import app, Contact, User, db
 import flask_login
 
 class TestWeb:
