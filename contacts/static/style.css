@@ -8,28 +8,35 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
-    font-size: 25px;
+    font-size: 22px;
+    border: solid;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-color: #d3d3d3;
 }
 
 #navbar li{
     float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 #navbar li a{
     display: block;
-    color: white;
+    color: #333;
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px 10px;
     text-decoration: none;
 }
 
 #navbar li:not(#active) a:hover {
-    background-color: #111;
+    background-color: #eeeeee;
 }
 
 #active{
-    background-color: #4c45d0;
+    background-color: orange;
+    border-radius: 5px;
 }
 
 #login_message{
@@ -41,11 +48,15 @@
 }
 
 h1{
-    font-size:25px;
+    font-size:20px;
+    text-decoration: underline;
+    text-decoration-color: #808080;
 }
 
 h2{
     font-size:20px;
+    text-decoration: underline;
+    text-decoration-color: #808080;
 }
 
 table {
