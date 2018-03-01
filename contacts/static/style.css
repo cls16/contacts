@@ -72,8 +72,8 @@ td, th {
 }
 
 th{
-    background-color:#4c45d0;
-    color:#ffffff;
+    background-color:#ffa500;
+    color:#000000;
     border:none;
     font-size:20px;
 }
@@ -104,7 +104,7 @@ footer{
 }
 
 #copyright{
-    color: #4c45d0;
+    color: #e99904;
 }
 
 input{

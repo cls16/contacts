@@ -7,13 +7,17 @@ Add Contact
 <h1>Add Contact</h1>
 <p>{{ message }}</p>
 <form action="" method="post" novalidate>
-    First Name: <input type="text" name="firstname" value="{{ values['firstname'] }}"><br>
+    First Name <br>
+    <input type="text" name="firstname" value="{{ values['firstname'] }}"><br>
     {{ field_error('firstname') }}<br>
-    Last Name: <input type="text" name="lastname" value="{{ values['lastname'] }}"><br>
+    Last Name <br>
+    <input type="text" name="lastname" value="{{ values['lastname'] }}"><br>
     {{ field_error('lastname') }}<br>
-    Email: <input type="" name="email" value="{{ values['email'] }}"><br>
+    Email <br>
+    <input type="" name="email" value="{{ values['email'] }}"><br>
     {{ field_error('email') }}<br>
-    Phone Number: <input type="tel" name="phonenumber" value="{{ values['phonenumber'] }}"><br>
+    Phone Number <br>
+    <input type="tel" name="phonenumber" value="{{ values['phonenumber'] }}"><br>
     {{ field_error('phonenumber') }}<br>
     <input type="submit" value="submit">
 </form>
