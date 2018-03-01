@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import contacts.validation as val
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 import click
 
 app = Flask(__name__)
@@ -21,7 +21,6 @@ from contacts.model import Contact, User
 
 if os.environ.get('TESTING_DB_INIT'):
     db.create_all()
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -47,7 +46,7 @@ def addcontact():
             values=request.form)
         else:
             form_firstname=request.form['firstname']
-            newcontact = Contact(firstname=form_firstname, lastname=request.form['lastname'], 
+            newcontact = Contact(user_id=current_user.id, firstname=form_firstname, lastname=request.form['lastname'], 
             email=request.form['email'], phonenumber=request.form['phonenumber'])
             db.session.add(newcontact)
             db.session.commit()
@@ -65,7 +64,7 @@ def contacts():
         db.session.commit()
         return redirect(url_for('contacts'))
     elif request.method == 'GET':
-        return render_template('contacts.html', contacts=Contact.query.all())
+        return render_template('contacts.html', contacts=Contact.query.filter_by(user_id = current_user.id).all())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
