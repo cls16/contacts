@@ -19,6 +19,9 @@ login_manager.init_app(app)
 
 from contacts.model import Contact, User
 
+if os.environ.get('TESTING_DB_INIT'):
+    db.create_all()
+
 
 @login_manager.user_loader
 def load_user(user_id):
