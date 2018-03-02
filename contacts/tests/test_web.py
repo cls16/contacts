@@ -7,18 +7,22 @@ class TestWeb:
     def setup_class(self):
         self.app = app
         self.app.testing = True
-        self.unauth_client = flask_webtest.TestApp(self.app, db=db, use_session_scopes=True)
-        self.client = flask_webtest.TestApp(self.app, db=db, use_session_scopes=True)
-        self.user = user = User.testing_create()
-        self.client.post('/login', params={'username':user.username,
-         'password':user.password}, status=302)
+
+    def client(self, login=True):
+        client = flask_webtest.TestApp(self.app, db=db, use_session_scopes=True)
+        if login:
+            user = User.testing_create()
+            post_data = {'username': user.username, 'password': user.password}
+            client.post('/login', params=post_data, status=302)
+            client._user = user
+        return client
 
     def setup(self):
         Contact.query.delete()
         db.session.commit()
 
     def test_form_success(self):
-        resp = self.client.get('/addcontact')
+        resp = self.client().get('/addcontact')
 
         form = resp.form
         form['firstname'] = 'john'
@@ -37,7 +41,7 @@ class TestWeb:
         assert contact.phonenumber == '000-000-0000'
 
     def test_form_fields_ivalid(self):
-        resp = self.client.get('/addcontact')
+        resp = self.client().get('/addcontact')
 
         form = resp.form
         form['firstname'] = 'joh3*'
@@ -62,7 +66,7 @@ class TestWeb:
     def test_contacts(self):
         #add contact to database
         resp = self.client().get('/addcontact')
-        
+
         form = resp.form
         form['firstname'] = 'john'
         form['lastname'] = 'doe'
@@ -75,6 +79,7 @@ class TestWeb:
         doc = resp.pyquery
         
         trs = doc('tr')
+
         assert len(trs) == 2
         
         #test header row
@@ -92,10 +97,9 @@ class TestWeb:
         input = contact_td.eq(0).find('input')
         assert input.attr('type') == 'checkbox'
         assert input.attr('name') == 'contact_id'
-        assert input.val() == str(newcontact.id)
         assert contact_td.eq(1).text() == 'john'
         assert contact_td.eq(2).text() == 'doe'
-        assert contact_td.eq(3).text() == 'johndoe@something.org'
+        assert contact_td.eq(3).text() == 'johndoe@example.org'
         assert contact_td.eq(4).text() == '000-000-0000'
         
     def test_delete_contact(self):
@@ -105,7 +109,7 @@ class TestWeb:
         db.session.add(newcontact)
         db.session.commit()
 
-        resp = self.client.get('/contacts')
+        resp = self.client().get('/contacts')
         doc = resp.pyquery
 
         #define number of table rows in contacts table as variable
@@ -120,7 +124,7 @@ class TestWeb:
         assert len(Contact.query.all()) == current_contact_trs
 
         #refresh page
-        resp = self.client.get('/contacts')
+        resp = self.client().get('/contacts')
         #make sure no contacts displayed
         doc = resp.pyquery
         trs = doc('tr')
@@ -130,40 +134,41 @@ class TestWeb:
 
 
     def test_login(self):
-        resp = self.client.get('/login')
+        resp = self.client(login=False).get('/login')
+        user = User.testing_create()
 
         form = resp.form
-        form['username'] = self.user.username
-        form['password'] = self.user.password
+        form['username'] = user.username
+        form['password'] = user.password
         resp = form.submit()
 
         resp = resp.follow()
-        print(resp)
         assert resp.request.url == 'http://localhost/home'
-        assert 'Hi, ' + self.user.username in resp
 
     def test_username_required(self):
-        resp = self.client.get('/login')
+        resp = self.client().get('/login')
+        user = User.testing_create()
 
         form = resp.form
         form['username'] = ''
-        form['password'] = self.user.password
+        form['password'] = user.password
         resp = form.submit()
 
         assert 'Please fill out this field.' in resp
         
     def test_password_required(self):
-        resp = self.client.get('/login')
+        resp = self.client().get('/login')
+        user = User.testing_create()
 
         form = resp.form
-        form['username'] = self.user.username
+        form['username'] = user.username
         form['password'] = ''
         resp = form.submit()
 
         assert 'Please fill out this field.' in resp
 
     def test_login_invalid(self):
-        resp = self.unauth_client.get('/login')
+        resp = self.client(login=False).get('/login')
 
         form = resp.form
         form['username'] = 'invalidusername'
@@ -177,10 +182,10 @@ class TestWeb:
         assert form_fields.eq(0).attr['value'] == 'invalidusername'
 
     def test_addcontact_login_required(self):
-        self.unauth_client.get('/addcontact', status=401)
+        self.client(login=False).get('/addcontact', status=401)
 
     def test_contacts_login_required(self):
-        self.unauth_client.get('/contacts', status=401)
+        self.client(login=False).get('/contacts', status=401)
         
     def test_logout(self):
         logout_client = flask_webtest.TestApp(app, db=db, use_session_scopes=True)
@@ -193,7 +198,7 @@ class TestWeb:
         resp = logout_client.get('/logout', status=401)
 
     def test_sign_up(self):
-        resp = self.unauth_client.get('/signup')
+        resp = self.client(login=False).get('/signup')
 
         form = resp.form
         form['username'] = 'newusername'
@@ -201,7 +206,7 @@ class TestWeb:
         resp = form.submit()
 
     def test_signup_field_required(self):
-        resp = self.unauth_client.get('/signup')
+        resp = self.client(login=False).get('/signup')
         
         form = resp.form
         form['username'] = ''
@@ -213,7 +218,7 @@ class TestWeb:
         assert error_p.eq(1).text() == 'Please fill out this field.' 
 
     def test_duplicate_username_invalid(self):
-        resp = self.unauth_client.get('/signup')
+        resp = self.client(login=False).get('/signup')
 
         duplicate_user = User(username = 'duplicate', password = 'foobar')
         db.session.add(duplicate_user)
@@ -228,5 +233,14 @@ class TestWeb:
         assert error_p.eq(0).text() == 'This username is already taken.' 
 
         User.query.filter_by(username='duplicate').delete()
+
+    def test_only_users_contacts_displayed(self):
+        #login and add contact
+        #make sure contact is there
+        #logout
+        #login as diff user
+        #make sure contact is NOT there
+        assert True
+
 
         
