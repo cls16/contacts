@@ -5,6 +5,8 @@ from blazeutils.strings import randchars
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    added_contacts = db.Column(db.Integer, nullable=False, server_default='0')
+    deleted_contacts = db.Column(db.Integer, nullable=False, server_default='0')
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 

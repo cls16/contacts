@@ -49,6 +49,7 @@ def addcontact():
             newcontact = Contact(user_id=current_user.id, firstname=form_firstname, lastname=request.form['lastname'], 
             email=request.form['email'], phonenumber=request.form['phonenumber'])
             db.session.add(newcontact)
+            current_user.added_contacts += 1
             db.session.commit()
             return redirect(url_for('contacts'))
     elif request.method == 'GET':
@@ -60,11 +61,22 @@ def addcontact():
 def contacts():
     if request.method == 'POST':
         ids = request.form.getlist('contact_id')
+        original_count = Contact.query.filter(Contact.id.in_(ids)).count()
         Contact.query.filter(Contact.id.in_(ids)).delete(synchronize_session=False)
+        db.session.commit()
+        new_count = Contact.query.filter(Contact.id.in_(ids)).count()
+        amount_deleted = original_count - new_count
+        current_user.deleted_contacts += amount_deleted
         db.session.commit()
         return redirect(url_for('contacts'))
     elif request.method == 'GET':
         return render_template('contacts.html', contacts=Contact.query.filter_by(user_id = current_user.id).all())
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -116,7 +128,7 @@ def signup():
             values=request.form)
         else:
             form_username=request.form['username']
-            newuser = User(username=form_username, password=request.form['password'])
+            newuser = User(username=form_username, password=request.form['password'], added_contacts=0, deleted_contacts=0)
             db.session.add(newuser)
             db.session.commit()
             user = User.validate(request.form['username'], request.form['password'])

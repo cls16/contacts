@@ -1,0 +1,11 @@
+{% set page = "profile" %}
+{%extends "layout.html"%}
+{%block title%}
+Profile
+{%endblock%}
+{%block content%}
+<h1>{{current_user.username}}'s profile</h1>
+<p>Your current password is: {{current_user.password}}</p>
+<p>Added contacts: {{current_user.added_contacts}}</p>
+<p>Deleted contacts: {{current_user.deleted_contacts}}</p>
+{%endblock%}
