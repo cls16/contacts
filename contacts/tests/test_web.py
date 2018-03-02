@@ -61,12 +61,17 @@ class TestWeb:
 
     def test_contacts(self):
         #add contact to database
-        newcontact = Contact(firstname = 'john', lastname = 'doe', 
-        email = 'johndoe@something.org', phonenumber = '000-000-0000')
-        db.session.add(newcontact)
-        db.session.commit()
+        resp = self.client().get('/addcontact')
         
-        resp = self.client.get('/contacts')
+        form = resp.form
+        form['firstname'] = 'john'
+        form['lastname'] = 'doe'
+        form['email'] = 'johndoe@example.org'
+        form['phonenumber'] = '000-000-0000'
+        resp = form.submit()
+        
+        resp = resp.follow()
+
         doc = resp.pyquery
         
         trs = doc('tr')
@@ -117,7 +122,12 @@ class TestWeb:
         #refresh page
         resp = self.client.get('/contacts')
         #make sure no contacts displayed
-        resp.mustcontain('No contacts to show')
+        doc = resp.pyquery
+        trs = doc('tr')
+        assert len(trs) == 0
+        ps = doc('p')
+        assert ps.eq(0).text() == "No contacts to show"
+
 
     def test_login(self):
         resp = self.client.get('/login')
